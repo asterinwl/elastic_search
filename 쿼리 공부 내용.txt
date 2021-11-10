@@ -1,0 +1,345 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+-모든 것을 불러온다.
+
+
+GET metricbeat-7.15.1/_search
+-metricbeat-7.15.1를 찾는다.
+
+GET _cat/indices/web_traffic
+-web_traffic이 데이터를 불러오기가 가능한지 확인한다.
+
+GET blogs/_search
+{
+  "query": {
+    "match": {
+      "title":
+        "elastic"
+    }
+  }
+}
+-blogs에서 제목이 "elastic"인 것을 찾는다.
+
+GET blogs/_search
+{
+  "query": {
+    "match": {
+      "title":
+        "elastic certified engineer"
+    }
+  }
+}
+-blogs에서 제목이 "elastic" 혹은 "certified" 혹은 "engineer"인 것을 찾는다.
+-따라서 위보다 값이 더 많이 나온다.
+
+GET blogs/_search
+{
+  "query": {
+    "match_phrase": {
+      "title":
+        "elastic certified engineer"
+    }
+  }
+}
+-blogs에서 제목이 "elastic certified engineer"인 것을 찾는다.
+-구문이 완전히 일치해야 되므로 위와 위위 것보다 값이 작게 나온다.
+
+GET blogs/_search
+{
+  "size": 50, 
+  "query": {
+    "match_all": {}
+  }
+}
+-blogs에 해당되는 것 총 50개 뽑기
+
+GET blogs/_search
+{
+  "_source": ["title"], 
+  "size": 50, 
+  "query": {
+    "match_all": {}
+  }
+}
+-blogs에 해당되는 제목 총 50개 뽑기
+
+{
+  "_source": ["title"], 
+  "size": 50, 
+  "query": {
+    "match": {
+      "title": "open source"
+    }
+  }
+}
+-blogs에 해당되는 제목 중 "open" 혹은 "source" 구문 들어가 있는 거 50개 뽑기
+
+GET blogs/_search
+{
+  "_source": "title", 
+  "size": 50, 
+  "query": {
+    "match": {
+      "title":{
+        "query": "open source",
+        "operator": "and"
+    }
+  }
+}
+}
+-blogs에 해당되는 제목 중 "open source" 구문 들어가 있는 거 50개 뽑기
+
+GET blogs/_search
+{
+  "explain": true,                          : socure 점수 이유를 말해준다.
+  "size": 100,
+  "_source": ["title","content"],          : title과 content의 점수를 알려줘라.
+  "query": {
+    "bool": {
+      "must": [                              : 반드시 들어가야 되는 것
+        {
+          "multi_match": {
+            "query": "open source",      : content와 title에 open 혹은 source가 들어가야 한다.
+            "fields": [
+              "content",
+              "title"
+              ]
+          }
+        }
+      ]
+      , "must_not": [                        : 반드시 들어가면 안되는 것
+        {
+          "match": {
+            "title": "Someone"             : title에는 Someone이 들어가면 안된다.
+          }
+        }
+      ],
+      "should": [                             : 해당되는 구문에 가중치를 더 부여한다.
+        {
+          "match": {                          : title에 elastiic이 들어가면 가중치를 더 부여한다.
+            "title": "elastic" 
+          }
+        }
+      ]
+    }
+  }
+}
+
+-crtl+i 를 동시에 누르면 선이 이쁘게 바꾸어 진다.
+-[ ] 를 기준으로 새로운 함수를 적어준다.
+-size를 0으로 설정하면 해당 함수의 값은 나오지 않고 기본적인 정보만 나온다.
+
+GET blogs/_search
+{
+  "size": 0,
+  "aggs" : {                                         : 결과값이 집합 꼴로 나오게 됨
+    "most_writer" : {
+      "terms": {
+        "field": "authors.full_name.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+GET blogs/_search
+{
+  "size": 0,
+  "query": {
+    "match": {
+      "title": "elasticsearch"                         : title이 "elasticsearch" 인것만 가져오기
+    }
+  }, 
+  "aggs" : {                                            : 결과값이 집합 꼴로 나오게 됨
+    "most_writer" : {
+      "terms": {
+        "field": "authors.full_name.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+
+GET blogs/_search
+{
+  "size": 0,
+  "aggs": {
+    "historam_year": {
+      "date_histogram": {
+        "field": "publish_date",
+        "calendar_interval": "year"
+      }, 
+      "aggs": {
+        "most_writer_year": {
+          "terms": {
+            "field": "authors.full_name.keyword",
+            "size": 3
+          }
+        }
+      }
+    }
+  }
+}
+
+GET blogs/_search
+{
+  "size": 0,
+  "aggs": {
+    "historam_year": {
+      "date_histogram": {
+        "field": "publish_date",
+        "calendar_interval": "year"
+      },
+      "aggs": {
+        "most_writer_year": {
+          "terms": {
+            "field": "authors.full_name.keyword",
+            "size": 3
+          }
+        },
+        "cardinality": {
+          "cardinality": {
+            "field": "authors.full_name.kdywrod"
+          }
+        }
+      }
+    }
+  }
+}
+
+PUT tmp_blogs/_doc/1
+{
+  "date" : "2017-11-20",
+  "author" : "Firstname, lastname",
+  "title" : "Elastic Advance Calendar 2017",
+  "category" : "Engineering"
+}
+-데이터 집어넣기
+
+GET tmp_bolgs/_search
+-데이터 찾기
+
+GET tmp_blogs/_mapping
+-데이터 매핑하기
+-매핑은 필드의 형식을 지정해주기 위해 많이 사용
+
+-----------------------------------------------------------------------------------------------------
+GET _analyze
+{
+  "tokenizer": "whitespace",
+  "text": "동해물과 백두산이"
+}
+
+결과
+{
+  "tokens" : [
+    {
+      "token" : "동해물과",
+      "start_offset" : 0,
+      "end_offset" : 4,
+      "type" : "word",
+      "position" : 0
+    },
+    {
+      "token" : "백두산이",
+      "start_offset" : 5,
+      "end_offset" : 9,
+      "type" : "word",
+      "position" : 1
+    }
+  ]
+}
+
+GET _analyze
+{
+  "tokenizer": "standard",
+  "text": "동해물과 백두산이"
+}
+
+결과
+{
+  "tokens" : [
+    {
+      "token" : "동해물과",
+      "start_offset" : 0,
+      "end_offset" : 4,
+      "type" : "<HANGUL>",
+      "position" : 0
+    },
+    {
+      "token" : "백두산이",
+      "start_offset" : 5,
+      "end_offset" : 9,
+      "type" : "<HANGUL>",
+      "position" : 1
+    }
+  ]
+}
+
+GET _analyze
+{
+  "analyzer": "english",
+  "text": "I am a boy, you are girl"
+}
+
+
+GET _analyze
+{
+  "tokenizer": "nori_tokenizer",
+  "text": "동해물과 백두산이"
+}
+-노리 사용하기
+
+결과
+{
+  "tokens" : [
+    {
+      "token" : "동해",
+      "start_offset" : 0,
+      "end_offset" : 2,
+      "type" : "word",
+      "position" : 0
+    },
+    {
+      "token" : "물",
+      "start_offset" : 2,
+      "end_offset" : 3,
+      "type" : "word",
+      "position" : 1
+    },
+    {
+      "token" : "과",
+      "start_offset" : 3,
+      "end_offset" : 4,
+      "type" : "word",
+      "position" : 2
+    },
+    {
+      "token" : "백두",
+      "start_offset" : 5,
+      "end_offset" : 7,
+      "type" : "word",
+      "position" : 3
+    },
+    {
+      "token" : "산",
+      "start_offset" : 7,
+      "end_offset" : 8,
+      "type" : "word",
+      "position" : 4
+    },
+    {
+      "token" : "이",
+      "start_offset" : 8,
+      "end_offset" : 9,
+      "type" : "word",
+      "position" : 5
+    }
+  ]
+}
