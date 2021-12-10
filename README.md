@@ -10,3 +10,5 @@
 #### elastic_search 자격증 사이트 : `file:///C:/Users/MongTa/Desktop/elastic_search/elastic_engineering/elastic_engineering/ElasticsearchEngineer-7.13.3/labinstructions/index.html` 영어로 되어 있다.
 
 #### nori 강의 : `https://www.elastic.co/kr/webinars/using-nori-in-elastic-cloud`
+
+#### [Elastic] elasticsearch 7.8 외부에서 9200 포트로 접근하는 방법 (elasticsearch error network.host: 0.0.0.0) : https://nirsa.tistory.com/261
