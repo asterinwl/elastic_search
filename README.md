@@ -9,4 +9,4 @@
 
 #### nori 강의 : https://www.elastic.co/kr/webinars/using-nori-in-elastic-cloud
 
-#### [Elastic] elasticsearch 7.8 외부에서 9200 포트로 접근하는 방법 (elasticsearch error network.host: 0.0.0.0) : https://nirsa.tistory.com/261
+#### [Elastic] elasticsearch 7.8 외부에서 9200 포트로 접근하는 방법 (elasticsearch error network.host: 0.0.0.0) : https://wiki.mcneel.com/ko/zoo/window7firewall, https://nirsa.tistory.com/261, https://studying-penguin.tistory.com/7
