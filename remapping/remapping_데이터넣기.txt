@@ -1,0 +1,227 @@
+POST test_firstname_lastname/document
+{
+  "mappings" : {
+      "properties" : {
+        "first" : {
+            "type" : "text"
+          },
+        "last" : {
+            "type" : "text"
+          }
+      }
+    }
+}
+
+
+PUT test_firstname_lastname/document/1
+{
+  "first":"John",
+  "last":"Doe"
+}
+
+GET test_firstname_lastname/_search
+
+POST test_firstname/document
+{
+  "mappings": {
+    "properties": {
+      "first": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+
+POST _reindex
+{
+  "source": {
+    "index": "test_firstname_lastname",
+    "_source": ["first"]
+  },
+  "dest": {
+    "index": "test_firstname"
+  }
+}
+
+GET test_firstname/_mapping
+GET test_firstname/_search
+
+----------------------------------------------------
+
+POST test_daytext/document
+{
+  "mappings" : {
+      "properties" : {
+        "day" : {
+            "type" : "text"
+          }
+      }
+    }
+}
+
+
+PUT test_daytext/document/1
+{
+  "day":"2021-12-14"
+}
+
+GET test_daytext/_search
+
+결과값
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 2,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "test_daytext",
+        "_type" : "document",
+        "_id" : "OVUBuH0BRtanmOuc_LiT",
+        "_score" : 1.0,
+        "_source" : {
+          "mappings" : {
+            "properties" : {
+              "day" : {
+                "type" : "text"
+              }
+            }
+          }
+        }
+      },
+      {
+        "_index" : "test_daytext",
+        "_type" : "document",
+        "_id" : "1",
+        "_score" : 1.0,
+        "_source" : {
+          "day" : "2021-12-14"
+        }
+      }
+    ]
+  }
+}
+
+POST test_daydate/document
+{
+  "mappings": {
+    "properties": {
+      "day": {
+        "type": "date"
+      }
+    }
+  }
+}
+
+
+POST _reindex
+{
+  "source": {
+    "index": "test_daytext",
+    "_source": ["day"]
+  },
+  "dest": {
+    "index": "test_daydate"
+  }
+}
+
+GET test_daydate/_mapping
+
+결과값
+{
+  "test_daydate" : {
+    "mappings" : {
+      "properties" : {
+        "day" : {
+          "type" : "date"
+        },
+        "mappings" : {
+          "properties" : {
+            "properties" : {
+              "properties" : {
+                "day" : {
+                  "properties" : {
+                    "type" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+GET test_daydate/_search
+
+결과값
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 3,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "test_daydate",
+        "_type" : "document",
+        "_id" : "OlUCuH0BRtanmOucXLi7",
+        "_score" : 1.0,
+        "_source" : {
+          "mappings" : {
+            "properties" : {
+              "day" : {
+                "type" : "date"
+              }
+            }
+          }
+        }
+      },
+      {
+        "_index" : "test_daydate",
+        "_type" : "document",
+        "_id" : "OVUBuH0BRtanmOuc_LiT",
+        "_score" : 1.0,
+        "_source" : { }
+      },
+      {
+        "_index" : "test_daydate",
+        "_type" : "document",
+        "_id" : "1",
+        "_score" : 1.0,
+        "_source" : {
+          "day" : "2021-12-14"
+        }
+      }
+    ]
+  }
+}

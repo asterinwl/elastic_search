@@ -1,0 +1,144 @@
+GET population/_search
+
+POST population2/_doc
+{
+  "mapping":{
+    "properties":{
+      "1991":{
+        "type":"integer"
+      }
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "population",
+    "_source": ["1991"]
+  },
+  "dest": {
+    "index": "population2"
+  }
+}
+
+GET population2/_search
+
+결과값
+:1991의 type는 바뀌었지만 1991의 값만 들어온 것을 알 수 있다.
+:모든 값을 바꾸어줄려면 모든 행에 대한 type를 바꾸어주어야한다.
+{
+  "took" : 328,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 197,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "O1UKuH0BRtanmOucCrjP",
+        "_score" : 1.0,
+        "_source" : {
+          "mapping" : {
+            "properties" : {
+              "1991" : {
+                "type" : "integer"
+              }
+            }
+          }
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "eFVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 0.0581
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "BlVnt30BRtanmOucErhR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 7.2248
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "qFVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 56.77124
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "tlVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 289.94844
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "vFVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 3.50613
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "ulVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 16.30577
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "E1Vnt30BRtanmOucErhR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 7.81842
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "mFVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 0.04141
+        }
+      },
+      {
+        "_index" : "population2",
+        "_type" : "_doc",
+        "_id" : "xlVnt30BRtanmOucErdR",
+        "_score" : 1.0,
+        "_source" : {
+          "1991" : 2.3374
+        }
+      }
+    ]
+  }
+}
