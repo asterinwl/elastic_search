@@ -1,0 +1,335 @@
+이중 mapping으로 인한 오류
+
+GET this/_search
+
+결과값
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 2062,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "this",
+        "_type" : "_doc",
+        "_id" : "ObfUsn0B_FKBDlGT7bMv",
+        "_score" : 1.0,
+        "_source" : {
+          "message" : """강남구,2306. 압구정역 2번 출구 옆,202006,1310
+""",
+          "@timestamp" : "2021-12-13T08:07:16.442Z",
+          "path" : "D:/logstash-7.16.0-windows-x86_64/bicycle2_202006.csv",
+          "대여소 그룹" : "강남구",
+          "대여 건수" : "1310",
+          "host" : "DESKTOP-G9DVJ1H",
+          "대여소 명" : "2306. 압구정역 2번 출구 옆",
+          "대여 일자 / 월" : "202006",
+          "@version" : "1"
+        }
+      }, 
+....
+
+GET this/_mapping
+
+결과값
+{
+  "this" : {
+    "mappings" : {
+      "properties" : {
+        "@timestamp" : {
+          "type" : "date"
+        },
+        "@version" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "host" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "message" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "path" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여 건수" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여 일자 / 월" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여소 그룹" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여소 명" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+POST this2/_doc
+{
+  "mapping":{
+    "properties":{
+      "대여 건수":{
+        "type":"integer"
+      },
+      "대여 일자 / 월":{
+        "type":"date"
+      },
+      "대여소 그룹":{
+        "type":"text"
+      },
+      "대여소 명":{
+        "type":"text"
+      }
+    }
+  }
+}
+:위의 값 중에서 "@timestamp","@version","host","message","path" 는 필요없는 값이라서 mapping을 하지 않았다.
+
+
+POST _reindex
+{
+  "source": {
+    "index": "this",
+    "_source": ["대여 건수","대여 일자 / 월","대여소 그룹","대여소 명"]
+  },
+  "dest": {
+    "index": "this2"
+  }
+}
+
+GET this2/_search
+
+결과값
+:"@timestamp","@version","host","message","path" 를 제외한 값들이 나왔다.
+:GET this/_search은 "value" : 2062, GET this2/_search은 "value" : 2063, 인데 이는 mapping정보가 추가되어서 그렇다.
+{
+  "took" : 372,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 2063,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "this2",
+        "_type" : "_doc",
+        "_id" : "PlUiuH0BRtanmOucDLhr",
+        "_score" : 1.0,
+        "_source" : {
+          "mapping" : {
+            "properties" : {
+              "대여 건수" : {
+                "type" : "integer"
+              },
+              "대여 일자 / 월" : {
+                "type" : "date"
+              },
+              "대여소 그룹" : {
+                "type" : "text"
+              },
+              "대여소 명" : {
+                "type" : "text"
+              }
+            }
+          }
+        }
+      },
+      {
+        "_index" : "this2",
+        "_type" : "_doc",
+        "_id" : "ObfUsn0B_FKBDlGT7bMv",
+        "_score" : 1.0,
+        "_source" : {
+          "대여 건수" : "1310",
+          "대여 일자 / 월" : "202006",
+          "대여소 명" : "2306. 압구정역 2번 출구 옆",
+          "대여소 그룹" : "강남구"
+        }
+      },
+      {
+        "_index" : "this2",
+        "_type" : "_doc",
+        "_id" : "KbfUsn0B_FKBDlGT7bIu",
+        "_score" : 1.0,
+        "_source" : {
+          "대여 건수" : "673",
+          "대여 일자 / 월" : "202006",
+          "대여소 명" : "2312. 청담역 13번 출구 앞",
+          "대여소 그룹" : "강남구"
+        }
+      },
+
+GET this2/_mapping
+{
+  "this2" : {
+    "mappings" : {
+      "properties" : {
+        "mapping" : {
+          "properties" : {
+            "properties" : {
+              "properties" : {
+                "대여 건수" : {
+                  "properties" : {
+                    "type" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256  : 이중 mapping이 생긴다. 이 때문에 mapping 오류가 생긴다.
+                        }
+                      }
+                    }
+                  }
+                },
+                "대여 일자 / 월" : {
+                  "properties" : {
+                    "type" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                },
+                "대여소 그룹" : {
+                  "properties" : {
+                    "type" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                },
+                "대여소 명" : {
+                  "properties" : {
+                    "type" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "대여 건수" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여 일자 / 월" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여소 그룹" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "대여소 명" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        }
+      }
+    }
+  }

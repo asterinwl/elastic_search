@@ -1,3 +1,5 @@
+이중 mapping으로 인한 오류
+
 POST test_firstname_lastname/document
 {
   "mappings" : {
@@ -157,7 +159,7 @@ GET test_daydate/_mapping
                       "fields" : {
                         "keyword" : {
                           "type" : "keyword",
-                          "ignore_above" : 256
+                          "ignore_above" : 256  : 이중 mapping이 생긴다. 이 때문에 mapping 오류가 생긴다.
                         }
                       }
                     }

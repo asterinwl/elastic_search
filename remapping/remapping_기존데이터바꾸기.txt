@@ -1,3 +1,5 @@
+이중 mapping으로 인한 오류
+
 GET population/_search
 
 POST population2/_doc
