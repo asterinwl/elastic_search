@@ -1,0 +1,319 @@
+성공!!
+
+PUT omg
+{
+  "mappings": {
+    "properties": {
+      "category": {
+        "type": "keyword"
+      },
+      "pages": {
+        "type": "float"
+      },
+      "title": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+PUT omg/_doc/1
+{
+  "title": "Romeo and Juliet",
+  "author": "William Shakespeare",
+  "category": "Tragedies",
+  "publish_date": "1562-12-01T00:00:00",
+  "pages": 125.55
+}
+
+GET omg/_search
+
+결과값
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 1,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "omg",
+        "_type" : "_doc",
+        "_id" : "1",
+        "_score" : 1.0,
+        "_source" : {
+          "title" : "Romeo and Juliet",
+          "author" : "William Shakespeare",
+          "category" : "Tragedies",
+          "publish_date" : "1562-12-01T00:00:00",
+          "pages" : 125.55
+        }
+      }
+    ]
+  }
+}
+
+GET omg/_mapping
+
+결과값
+{
+  "omg" : {
+    "mappings" : {
+      "properties" : {
+        "author" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "category" : {
+          "type" : "keyword"
+        },
+        "pages" : {
+          "type" : "float"
+        },
+        "publish_date" : {
+          "type" : "date"
+        },
+        "title" : {
+          "type" : "text"
+        }
+      }
+    }
+  }
+}
+
+PUT omg2
+{
+  "mappings": {
+    "properties": {
+      "pages": {
+        "type": "integer"
+      }
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "omg"
+  },
+  "dest": {
+    "index": "omg2"    : "source": 을 넣지 않으면 모든 값이 반영된다.
+  }
+}
+
+PUT omg2/_doc/2
+{
+  "title": "Romeo and Juliet",
+  "author": "William Shakespeare",
+  "category": "Tragedies",
+  "publish_date": "1562-12-01T00:00:00",
+  "pages": 125.55
+}
+
+PUT omg2/_doc/3
+{
+  "title": "Romeo and Juliet",
+  "author": "William Shakespeare",
+  "category": "Tragedies",
+  "publish_date": "1562-12-01T00:00:00",
+  "pages": 126.75
+}
+
+GET omg2/_search
+
+결과값
+:pages는 기존에 검색했던 대로 소수점까지 나온다.
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 3,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "omg2",
+        "_type" : "_doc",
+        "_id" : "1",
+        "_score" : 1.0,
+        "_source" : {
+          "title" : "Romeo and Juliet",
+          "author" : "William Shakespeare",
+          "category" : "Tragedies",
+          "publish_date" : "1562-12-01T00:00:00",
+          "pages" : 125.55
+        }
+      },
+      {
+        "_index" : "omg2",
+        "_type" : "_doc",
+        "_id" : "2",
+        "_score" : 1.0,
+        "_source" : {
+          "title" : "Romeo and Juliet",
+          "author" : "William Shakespeare",
+          "category" : "Tragedies",
+          "publish_date" : "1562-12-01T00:00:00",
+          "pages" : 125.55
+        }
+      },
+      {
+        "_index" : "omg2",
+        "_type" : "_doc",
+        "_id" : "3",
+        "_score" : 1.0,
+        "_source" : {
+          "title" : "Romeo and Juliet",
+          "author" : "William Shakespeare",
+          "category" : "Tragedies",
+          "publish_date" : "1562-12-01T00:00:00",
+          "pages" : 126.75
+        }
+      }
+    ]
+  }
+}
+
+GET omg2/_search
+{
+  "query": {
+    "match": {
+      "pages": 126.75
+    }
+  }
+}
+
+결과값
+:하지만 pages를 126.75 처럼 float꼴로 검색시 검색결과가 나오지 않는다.
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 0,
+      "relation" : "eq"
+    },
+    "max_score" : null,
+    "hits" : [ ]
+  }
+}
+
+GET omg2/_search
+{
+  "query": {
+    "match": {
+      "pages": 126
+    }
+  }
+}
+
+결과값
+:pages를 126처럼 integer꼴로 검색시 검색결과가 나온다.
+:omg2의 reindex가 훌륭히 되었음을 알 수 있다.
+{
+  "took" : 0,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 1,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "omg2",
+        "_type" : "_doc",
+        "_id" : "3",
+        "_score" : 1.0,
+        "_source" : {
+          "title" : "Romeo and Juliet",
+          "author" : "William Shakespeare",
+          "category" : "Tragedies",
+          "publish_date" : "1562-12-01T00:00:00",
+          "pages" : 126.75
+        }
+      }
+    ]
+  }
+}
+
+GET omg2/_mapping
+
+결과값
+{
+  "omg2" : {
+    "mappings" : {
+      "properties" : {
+        "author" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "category" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "pages" : {
+          "type" : "integer"
+        },
+        "publish_date" : {
+          "type" : "date"
+        },
+        "title" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
