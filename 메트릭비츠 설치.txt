@@ -1,0 +1,71 @@
+
+관제하고싶은 서버에 메트릭 비츠 설치
+curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-oss-7.15.1-x86_64.rpm
+
+sudo rpm -vi metricbeat-oss-7.15.1-x86_64.rpm
+
+
+해당 경로에 파일 수정
+/etc/metricbeat/metricbeat.yml
+
+
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+
+  # Kibana Host
+  # Scheme and port can be left out and will be set to the default (http and 5601)
+  # In case you specify and additional path, the scheme is required: http://localhost:5601/path
+  # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
+  host: "172.30.1.27:5601" #키바나 ip port#
+
+  # Kibana Space ID
+  # ID of the Kibana Space into which the dashboards should be loaded. By default,
+  # the Default Space will be used.
+  #space.id:
+
+# =============================== Elastic Cloud ================================
+
+# These settings simplify using Metricbeat with the Elastic Cloud (https://cloud.elastic.co/).
+
+# The cloud.id setting overwrites the `output.elasticsearch.hosts` and
+# `setup.kibana.host` options.
+# You can find the `cloud.id` in the Elastic Cloud web UI.
+#cloud.id:
+
+# The cloud.auth setting overwrites the `output.elasticsearch.username` and
+# `output.elasticsearch.password` settings. The format is `<user>:<pass>`.
+#cloud.auth:
+
+# ================================== Outputs ===================================
+
+# Configure what output to use when sending the data collected by the beat.
+
+# ---------------------------- Elasticsearch Output ----------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["172.30.1.27:9200"] #엘라스틱 ip port#
+
+  # Protocol - either `http` (default) or `https`.
+  #protocol: "https"
+
+  # Authentication credentials - either API key or username/password.
+  #api_key: "id:api_key"
+  #username: "elastic"
+  #password: "changeme"
+
+
+############################
+구동 확인
+sudo metricbeat -e -c /etc/metricbeat/metricbeat.yml
+##############################
+메트릭 리스트 확인
+metricbeat modules list
+
+메트릭 모듈 enable
+metricbeat modules enable system
+
+메트릭 시스템 등록
+sudo systemctl enable metricbeat
+메트릭 스타트
+sudo systemctl start metricbeat
