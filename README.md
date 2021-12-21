@@ -11,3 +11,4 @@
 #### [Elastic] elasticsearch 7.8 외부에서 9200 포트로 접근하는 방법 (elasticsearch error network.host: 0.0.0.0) : https://wiki.mcneel.com/ko/zoo/window7firewall, https://nirsa.tistory.com/261, https://studying-penguin.tistory.com/7
 #### logstash 사용법 : https://horae.tistory.com/entry/logstash-with-python, https://koocci-dev.tistory.com/19, https://koocci-dev.tistory.com/20
 #### Dashboard 검정색으로 바꾸기 : https://velog.io/@cckn/Kibana-Dark-mode-%EB%B3%80%EA%B2%BD
+#### Metricbeats Kibana 만들기 : https://cookiethecat2020.blogspot.com/2020/12/metricbeat-kibana.html
