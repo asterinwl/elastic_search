@@ -79,4 +79,4 @@ sudo systemctl start metricbeat
 sudo systemctl restart metricbeat
 
 메트릭 상황 보기
-udo systemctl status metricbeat
+sudo systemctl status metricbeat
