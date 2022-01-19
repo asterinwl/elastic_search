@@ -15,4 +15,4 @@
 #### Dashboard 검정색으로 바꾸기 : https://velog.io/@cckn/Kibana-Dark-mode-%EB%B3%80%EA%B2%BD
 #### Metricbeats Kibana 만들기 : https://cookiethecat2020.blogspot.com/2020/12/metricbeat-kibana.html
 #### Docker elasticsearch.yml 위치 : https://stackoverflow.com/questions/61230854/where-is-my-elasticsearch-yml-in-my-docker-image
-#### mysql_translation : https://www.elastic.co/guide/en/elasticsearch//reference/master/sql-translate.html
+#### mysql_translation : https://www.elastic.co/guide/en/elasticsearch//reference/master/xpack-sql.html
