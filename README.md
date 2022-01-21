@@ -1,5 +1,6 @@
 # elastic_search
 ## elastic_search란?? : https://www.youtube.com/watch?v=CU2hFK5ZMYA
+## elastic_Search 설치하는 다른 방법(7.2.1) : https://pinggoopark.tistory.com/5
 #### Dev Tools 실행시키기 : ctrl+Enter
 #### Dev Tools 칸 예쁘게 뛰어쓰기 : ctrl+i
 
