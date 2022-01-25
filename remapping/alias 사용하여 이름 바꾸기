@@ -1,0 +1,71 @@
+https://wedul.site/618 사이트를 참고한다.
+
+나는 밑에처럼 실습하였다.
+
+PUT hey
+{"mappings": {
+  "properties": {
+    "number":{
+      "type": "text"
+    }
+  }
+}
+}
+
+GET hey/_search
+
+PUT hey/_doc/1
+{
+  "number":1
+}
+
+PUT you
+{"mappings": {
+  "properties": {
+    "number":{
+      "type": "long"
+    }
+  }
+}
+}
+
+POST _reindex?wait_for_completion=false
+{
+  "source": {
+    "index": "hey"
+  },
+  "dest": {
+    "index": "you"
+  }
+}
+
+GET you/_search
+GET hey/_search
+
+DELETE hey
+
+POST _aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "you",
+        "alias": "hey"
+      }
+    }
+  ]
+}
+
+GET hey/_search
+
+GET hey/_search
+{
+  "query": {
+    "term": {
+      "number": {
+        "value": 1
+      }
+    }
+  }
+}
+GET hey/_mapping
