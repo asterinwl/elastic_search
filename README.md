@@ -19,5 +19,6 @@
 #### mysql_translation : https://www.elastic.co/guide/en/elasticsearch//reference/master/xpack-sql.html
 #### minimum_should_match : https://lts0606.tistory.com/503 , https://bloodseeker.tistory.com/8 , https://unuseful.tistory.com/21 must와 should에서는 score 계산을 해야 하므로 query context, 즉 cache가 동작하지 않고, filter와 must_not에서는 score 계산이 필요 없으므로 fitler context로 동작해 cache의 득을 볼 수 있다.
 #### 한국어 분석기 아리랑 docker설치방법 : https://ahngo13.github.io/elasticsearch-arirang/
+#### Apache Log4j2 원격 코드 실행(RCE) 취약점 해결법 : https://shinwusub.tistory.com/m/147 , https://discuss.elastic.co/t/apache-log4j2-remote-code-execution-rce-vulnerability-cve-2021-44228-esa-2021-31/291476
 
 #### project : https://discuss.elastic.co/t/logstash-jdbc-document-id-uid-problem/35174/9 https://github.com/elastic/logstash/issues/11094
