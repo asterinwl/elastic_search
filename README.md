@@ -21,5 +21,6 @@
 #### 한국어 분석기 아리랑 docker설치방법 : https://ahngo13.github.io/elasticsearch-arirang/ ★플러그인 설치 후 elasticsearch를 끄고 다시 시작해야 아리랑 index가 먹힌다★
 #### Apache Log4j2 원격 코드 실행(RCE) 취약점 해결법 : https://shinwusub.tistory.com/m/147 , https://discuss.elastic.co/t/apache-log4j2-remote-code-execution-rce-vulnerability-cve-2021-44228-esa-2021-31/291476
 #### 오타교정 API : https://danawalab.github.io/elastic/2020/05/21/Elasticsearch-SuggestApi.html, https://danawalab.github.io/elastic/2020/06/17/Elasticsearch-TypoCorrection.html
+#### filter exists : https://findstar.pe.kr/2018/01/24/difference-between-null-and-empty-string-elasticsearch/, https://www.elastic.co/guide/en/elasticsearch/reference/7.5/query-dsl-exists-query.html
 
 #### project : https://discuss.elastic.co/t/logstash-jdbc-document-id-uid-problem/35174/9 https://github.com/elastic/logstash/issues/11094
