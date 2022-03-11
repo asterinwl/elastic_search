@@ -23,5 +23,6 @@
 #### 오타교정 API : https://danawalab.github.io/elastic/2020/05/21/Elasticsearch-SuggestApi.html, https://danawalab.github.io/elastic/2020/06/17/Elasticsearch-TypoCorrection.html
 #### filter exists : https://findstar.pe.kr/2018/01/24/difference-between-null-and-empty-string-elasticsearch/, https://www.elastic.co/guide/en/elasticsearch/reference/7.5/query-dsl-exists-query.html
 #### filter stop(금칙어) 활용법 : https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
+#### elasticsearch 버전 정보 : https://www.elastic.co/kr/blog/category/releases
 
 #### project : https://discuss.elastic.co/t/logstash-jdbc-document-id-uid-problem/35174/9 https://github.com/elastic/logstash/issues/11094
