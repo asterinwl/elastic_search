@@ -1,0 +1,68 @@
+## logstash>config
+
+mysql-connector-java-5.1.38.jar 파일 다운하고 넣기
+
+## logstash>pipeline>mysql_test.conf
+
+input {
+        jdbc { 
+        jdbc_driver_library => "/usr/share/logstash/config/mysql-connector-java-5.1.38.jar"
+        jdbc_driver_class => "com.mysql.jdbc.Driver"
+        jdbc_validate_connection=>true 
+        jdbc_connection_string=>"...." 
+        jdbc_user=>.....
+        jdbc_password=>.....
+        schedule => "0 */6 * * * *" 
+        statement=>"select * from ...."} 
+}
+
+output { 
+        elasticsearch {
+        index => mysql_test
+	hosts => [ "....:9200" ] 
+        document_id => "%{id}"
+        #ilm_enabled => false
+        } 
+}
+
+## logstash>Dockerfile
+
+FROM logstash:6.6.1
+
+RUN bin/logstash-plugin install logstash-input-jdbc
+
+COPY ./mysql-connector-java-5.1.38.jar /usr/share/logstash/config/mysql-connector-java-5.1.38.jar
+
+##docker-compose.yml
+
+  logstash:
+    image: logstash:7.9.1
+    container_name: logstash
+    hostname: logstash
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: false
+      - type: bind
+        source: ./logstash/config/pipelines.yml
+        target: /usr/share/logstash/config/pipelines.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/config/mysql-connector-java-5.1.38.jar
+        target: /usr/share/logstash/config/mysql-connector-java-5.1.38.jar
+        read_only: false
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
