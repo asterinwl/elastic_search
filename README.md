@@ -25,5 +25,6 @@
 #### filter stop(금칙어) 활용법 : https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
 #### elasticsearch 버전 정보 : https://www.elastic.co/kr/blog/category/releases
 #### elasticsearch upgrade : https://medium.com/@rana.ash1997/elasticsearch-rolling-upgrade-from-7-8-to-7-13-8505bf269803, https://www.youtube.com/watch?v=HeVLocuYwxI, https://www.elastic.co/guide/en/elasticsearch/reference/7.17/targz.html
+#### 아리랑 관련 자료 : https://github.com/nuri428/arirang.morph/tree/master/src/main/resources/org/apache/lucene/analysis/kr/dic
 
 #### project : https://discuss.elastic.co/t/logstash-jdbc-document-id-uid-problem/35174/9 https://github.com/elastic/logstash/issues/11094
